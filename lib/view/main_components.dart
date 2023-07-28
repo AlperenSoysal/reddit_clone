@@ -1,11 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:reddit_clone/view/theme/app_colors.dart';
 import 'package:reddit_clone/view/theme/font_styles.dart';
-
 import '../blocs/post_blocs/reddit_posts_bloc.dart';
-import '../models/api_providers/reddit_post_api_provider.dart';
 import '../models/data_models/reddit_post_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -83,43 +80,46 @@ class RedditPost extends StatelessWidget {
                   const SizedBox(
                     width: CSizes.triplePadding,
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        redditPost.subReddit,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: CSizes.normal,
-                          fontWeight: CWeights.normal,
-                        ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'by',
+                      style: const TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: CSizes.small,
+                        fontWeight: CWeights.normal,
                       ),
-                      RichText(
-                        text: TextSpan(
-                          text: 'by',
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: ' ${redditPost.author}',
                           style: const TextStyle(
-                            color: Colors.blueGrey,
+                            color: Colors.white,
                             fontSize: CSizes.small,
                             fontWeight: CWeights.normal,
                           ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: ' ${redditPost.author}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: CSizes.small,
-                                fontWeight: CWeights.normal,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const Icon(
-                Icons.child_friendly_outlined,
-                color: Colors.white,
+              Row(
+                children: [
+                  Text(
+                    redditPost.subReddit,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: CSizes.normal,
+                      fontWeight: CWeights.normal,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: CSizes.triplePadding,
+                  ),
+                  const Icon(
+                    Icons.topic,
+                    color: Colors.white,
+                  ),
+                ],
               ),
             ],
           ),
