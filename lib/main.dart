@@ -16,6 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Reddit Flutter Clone',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
       ),
       home: const MyHomePage(title: 'Reddit Flutter Clone'),
     );
