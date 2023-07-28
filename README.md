@@ -1,6 +1,6 @@
 # reddit_clone
 
-A new Flutter project.
+A new Flutter project made with v3.7.12.
 
 ## Getting Started
 
