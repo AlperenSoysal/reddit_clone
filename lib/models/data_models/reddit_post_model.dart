@@ -3,18 +3,18 @@ class RedditPostModel {
   final String description;
   final String subReddit;
   final String author;
-  final String thumbnailUrl;
-  final int thumbnailWidth;
-  final int thumbnailHeight;
+  final String? thumbnailUrl;
+  final double? thumbnailWidth;
+  final double? thumbnailHeight;
 
   RedditPostModel({
     required this.title,
     required this.description,
     required this.subReddit,
     required this.author,
-    required this.thumbnailUrl,
-    required this.thumbnailWidth,
-    required this.thumbnailHeight,
+    this.thumbnailUrl,
+    this.thumbnailWidth,
+    this.thumbnailHeight,
   });
 
   Map<String, dynamic> toJSON() => {
