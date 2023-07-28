@@ -216,3 +216,30 @@ class ErrorOccurredWidget extends StatelessWidget {
     );
   }
 }
+
+class SwitchTopicButton extends StatelessWidget {
+  const SwitchTopicButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 70,
+      height: 70,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: AppColors.twitterBlue,
+      ),
+      child: const Center(
+        child: Text(
+          "Switch Topic",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: CSizes.small,
+            fontWeight: CWeights.normal,
+          ),
+        ),
+      ),
+    );
+  }
+}

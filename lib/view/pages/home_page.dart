@@ -19,6 +19,8 @@ class _RedditHomePageState extends State<RedditHomePage> {
     return BlocProvider<RedditPostsBloc>(
       create: (BuildContext context) => RedditPostsBloc()..add(FetchRedditPostsEvent()),
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: const SwitchTopicButton(),
         backgroundColor: AppColors.mainBlue,
         body: BlocBuilder<RedditPostsBloc, AbstractRedditPostsState>(
           builder: (context, state) {
