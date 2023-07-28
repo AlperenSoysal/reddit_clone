@@ -29,9 +29,15 @@ class FetchRedditPostsEvent implements AbstractRedditPostsEvent {
   FetchRedditPostsEvent();
 }
 
+class SwitchTopicEvent implements AbstractRedditPostsEvent {
+  final String topic;
+  SwitchTopicEvent({required this.topic});
+}
+
 class RedditPostsBloc extends Bloc<AbstractRedditPostsEvent, AbstractRedditPostsState> {
   RedditPostsBloc() : super(const RedditPostsLoadingState()) {
     on<FetchRedditPostsEvent>(_onFetch);
+    on<SwitchTopicEvent>(_onSwitchTopic);
   }
 
   Future<void> _onFetch(FetchRedditPostsEvent event, Emitter<AbstractRedditPostsState> emitter) async {
@@ -39,7 +45,28 @@ class RedditPostsBloc extends Bloc<AbstractRedditPostsEvent, AbstractRedditPosts
       emitter(
         const RedditPostsLoadingState(),
       );
-      final List<dynamic>? postsJson = await RedditPostApiProvider.fetchHomePagePosts();
+      final List<dynamic>? postsJson = await RedditPostApiProvider.fetchHomePagePosts(topic: "flutterdev");
+      if (postsJson == null) {
+        emitter(RedditPostsErrorState("Some error from api"));
+      } else {
+        List<RedditPostModel> redditPostList = postsJson.map((postAsJson) => RedditPostModel.fromJSON(postAsJson)).toList();
+        emitter(
+          RedditPostsLoadedState(
+            redditPosts: redditPostList,
+          ),
+        );
+      }
+    } catch (e) {
+      emitter(RedditPostsErrorState(e.toString()));
+    }
+  }
+
+  Future<void> _onSwitchTopic(SwitchTopicEvent event, Emitter<AbstractRedditPostsState> emitter) async {
+    try {
+      emitter(
+        const RedditPostsLoadingState(),
+      );
+      final List<dynamic>? postsJson = await RedditPostApiProvider.fetchHomePagePosts(topic: event.topic);
       if (postsJson == null) {
         emitter(RedditPostsErrorState("Some error from api"));
       } else {

@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:reddit_clone/view/theme/app_colors.dart';
 import 'package:reddit_clone/view/theme/font_styles.dart';
 
+import '../blocs/post_blocs/reddit_posts_bloc.dart';
 import '../models/api_providers/reddit_post_api_provider.dart';
 import '../models/data_models/reddit_post_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -113,14 +117,9 @@ class RedditPost extends StatelessWidget {
                   ),
                 ],
               ),
-              InkWell(
-                onTap: () {
-                  RedditPostApiProvider.fetchHomePagePosts();
-                },
-                child: const Icon(
-                  Icons.child_friendly_outlined,
-                  color: Colors.white,
-                ),
+              const Icon(
+                Icons.child_friendly_outlined,
+                color: Colors.white,
               ),
             ],
           ),
@@ -138,7 +137,10 @@ class RedditPost extends StatelessWidget {
           const SizedBox(
             height: CSizes.triplePadding * 2,
           ),
-          if (redditPost.thumbnailUrl != null && redditPost.thumbnailUrl != "self" && redditPost.thumbnailUrl != "default")
+          if (redditPost.thumbnailUrl != null &&
+              redditPost.thumbnailUrl != "self" &&
+              redditPost.thumbnailUrl != "default" &&
+              redditPost.thumbnailUrl != "")
             Image.network(
               redditPost.thumbnailUrl!,
               height: redditPost.thumbnailHeight?.toDouble(),
@@ -218,25 +220,33 @@ class ErrorOccurredWidget extends StatelessWidget {
 }
 
 class SwitchTopicButton extends StatelessWidget {
-  const SwitchTopicButton({Key? key}) : super(key: key);
+  SwitchTopicButton({Key? key}) : super(key: key);
+
+  final List<String> topicList = ["trading", "flutterdev"];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 70,
-      height: 70,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: AppColors.twitterBlue,
-      ),
-      child: const Center(
-        child: Text(
-          "Switch Topic",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: CSizes.small,
-            fontWeight: CWeights.normal,
+    return InkWell(
+      onTap: () {
+        final int randomIndex = Random().nextInt(topicList.length);
+        context.read<RedditPostsBloc>().add(SwitchTopicEvent(topic: topicList[randomIndex]));
+      },
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.twitterBlue,
+        ),
+        child: const Center(
+          child: Text(
+            "Switch Topic",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: CSizes.small,
+              fontWeight: CWeights.normal,
+            ),
           ),
         ),
       ),
