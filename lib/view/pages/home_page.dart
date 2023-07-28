@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reddit_clone/blocs/post_blocs/reddit_posts_bloc.dart';
 import 'package:reddit_clone/view/main_components.dart';
 import 'package:reddit_clone/view/theme/app_colors.dart';
 import '../../models/data_models/reddit_post_model.dart';
@@ -14,37 +16,56 @@ class RedditHomePage extends StatefulWidget {
 class _RedditHomePageState extends State<RedditHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.mainBlue,
-      body: CustomScrollView(
-        slivers: [
-          const CustomAppBar(title: "Reddit"),
-          SliverList(
-            delegate: SliverChildListDelegate(_buildRedditPostList()),
-          ),
-        ],
+    return BlocProvider<RedditPostsBloc>(
+      create: (BuildContext context) => RedditPostsBloc()..add(FetchRedditPostsEvent()),
+      child: Scaffold(
+        backgroundColor: AppColors.mainBlue,
+        body: BlocBuilder<RedditPostsBloc, AbstractRedditPostsState>(
+          builder: (context, state) {
+            if (state is RedditPostsLoadedState) {
+              return CustomScrollView(
+                slivers: [
+                  const CustomAppBar(title: "Reddit"),
+                  SliverList(
+                    delegate: SliverChildListDelegate(_buildRedditPostList(state.redditPosts)),
+                  )
+                ],
+              );
+            } else if (state is RedditPostsErrorState) {
+              return ErrorOccurredWidget(
+                reload: () => context.read<RedditPostsBloc>().add(FetchRedditPostsEvent()),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.redditRed,
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
 
-  List<Widget> _buildRedditPostList() {
+  List<Widget> _buildRedditPostList(List<RedditPostModel> redditPosts) {
     final List<Widget> listItems = [];
-    for (int i = 0; i < 10; i++) {
+    for (var redditPost in redditPosts) {
       listItems.add(
         RedditPost(
           redditPost: RedditPostModel(
-            title: "I Have concern",
-            description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
-                " dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            subReddit: "FlutterDev",
-            author: "alpoSS",
-            thumbnailHeight: 50,
-            thumbnailWidth: 140,
-            thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzqWqVyTbBJ6tFqa_LYLxq4rqbSv6rVQKzUg&usqp=CAU",
+            title: redditPost.title,
+            description: redditPost.description,
+            subReddit: redditPost.subReddit,
+            author: redditPost.author,
+            thumbnailUrl: redditPost.thumbnailUrl,
+            thumbnailHeight: redditPost.thumbnailHeight,
+            thumbnailWidth: redditPost.thumbnailWidth,
           ),
         ),
       );
     }
+
     listItems.add(
       SizedBox(
         height: MediaQuery.of(context).padding.bottom + CSizes.triplePadding,

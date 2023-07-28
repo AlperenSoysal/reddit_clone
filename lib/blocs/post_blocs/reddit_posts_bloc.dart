@@ -42,7 +42,14 @@ class RedditPostsBloc extends Bloc<AbstractRedditPostsEvent, AbstractRedditPosts
       final List<dynamic>? postsJson = await RedditPostApiProvider.fetchHomePagePosts();
       if (postsJson == null) {
         emitter(RedditPostsErrorState("Some error from api"));
-      } else {}
+      } else {
+        List<RedditPostModel> redditPostList = postsJson.map((postAsJson) => RedditPostModel.fromJSON(postAsJson)).toList();
+        emitter(
+          RedditPostsLoadedState(
+            redditPosts: redditPostList,
+          ),
+        );
+      }
     } catch (e) {
       emitter(RedditPostsErrorState(e.toString()));
     }

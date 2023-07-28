@@ -138,11 +138,11 @@ class RedditPost extends StatelessWidget {
           const SizedBox(
             height: CSizes.triplePadding * 2,
           ),
-          if (redditPost.thumbnailUrl != null)
+          if (redditPost.thumbnailUrl != null && redditPost.thumbnailUrl != "self" && redditPost.thumbnailUrl != "default")
             Image.network(
               redditPost.thumbnailUrl!,
-              height: redditPost.thumbnailHeight,
-              width: redditPost.thumbnailWidth,
+              height: redditPost.thumbnailHeight?.toDouble(),
+              width: redditPost.thumbnailWidth?.toDouble(),
               fit: BoxFit.fill,
             ),
           const SizedBox(
@@ -158,6 +158,58 @@ class RedditPost extends StatelessWidget {
           ),
           const SizedBox(
             height: CSizes.triplePadding * 2,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ErrorOccurredWidget extends StatelessWidget {
+  const ErrorOccurredWidget({
+    Key? key,
+    required this.reload,
+    this.errorText,
+    this.errorStyle,
+  }) : super(key: key);
+
+  final VoidCallback reload;
+  final String? errorText;
+  final TextStyle? errorStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            errorText ?? "Bir şeyler ters gitti tekrar dene.",
+            textAlign: TextAlign.center,
+            style: errorStyle ??
+                const TextStyle(
+                  color: Colors.white,
+                  fontSize: CSizes.normal,
+                  fontWeight: CWeights.normal,
+                ),
+          ),
+          const SizedBox(
+            height: CSizes.triplePadding,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(32),
+            ),
+            child: const Text(
+              "Tekrar Dene",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: CSizes.normal,
+                fontWeight: CWeights.normal,
+              ),
+            ),
           ),
         ],
       ),
