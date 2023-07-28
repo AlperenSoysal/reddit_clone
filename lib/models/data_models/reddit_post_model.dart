@@ -4,8 +4,8 @@ class RedditPostModel {
   final String subReddit;
   final String author;
   final String? thumbnailUrl;
-  final double? thumbnailWidth;
-  final double? thumbnailHeight;
+  final int? thumbnailWidth;
+  final int? thumbnailHeight;
 
   RedditPostModel({
     required this.title,
@@ -28,14 +28,15 @@ class RedditPostModel {
       };
 
   factory RedditPostModel.fromJSON(Map<String, dynamic> json) {
+    final Map<String, dynamic> postDataJson = json["data"];
     return RedditPostModel(
-      title: json['title'],
-      description: json['selftext'],
-      subReddit: json['subreddit'],
-      author: json['author'],
-      thumbnailUrl: json['thumbnail'],
-      thumbnailWidth: json['thumbnail_width'],
-      thumbnailHeight: json['thumbnail_height'],
+      title: postDataJson['title'],
+      description: postDataJson['selftext'],
+      subReddit: postDataJson['subreddit'],
+      author: postDataJson['author'],
+      thumbnailUrl: postDataJson['thumbnail'],
+      thumbnailWidth: postDataJson['thumbnail_width'],
+      thumbnailHeight: postDataJson['thumbnail_height'],
     );
   }
 }
