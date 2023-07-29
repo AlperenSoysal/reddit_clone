@@ -15,5 +15,5 @@ Technologies
   - flutter_bloc: ^8.1.3 used for state management
   - Basic Material widgets for UI
 
-- [This is the source of app usage video](https://drive.google.com/file/d/1rANFjyBvafuAkocvIYqW78fFKbh_Hj72/view?usp=sharing)
+- [This is the source of app usage video](https://drive.google.com/file/d/1Y7rI8346xtKyAgATSX5c1qfuTg9u8tLX/view?usp=sharing)
 
