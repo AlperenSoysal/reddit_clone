@@ -14,6 +14,8 @@ class RedditHomePage extends StatefulWidget {
 }
 
 class _RedditHomePageState extends State<RedditHomePage> {
+  Function? updateHomePageFunction;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RedditPostsBloc>(
@@ -23,31 +25,37 @@ class _RedditHomePageState extends State<RedditHomePage> {
         floatingActionButton: SwitchTopicButton(),
         backgroundColor: AppColors.mainBlue,
         body: NestedScrollView(
-          floatHeaderSlivers: false,
+          floatHeaderSlivers: true,
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               const CustomAppBar(title: "Reddit"),
             ];
           },
-          body: BlocBuilder<RedditPostsBloc, AbstractRedditPostsState>(
-            builder: (context, state) {
-              if (state is RedditPostsLoadedState) {
-                return ListView(
-                  padding: EdgeInsets.zero,
-                  children: _buildRedditPostList(state.redditPosts),
-                );
-              } else if (state is RedditPostsErrorState) {
-                return ErrorOccurredWidget(
-                  reload: () => context.read<RedditPostsBloc>().add(FetchRedditPostsEvent()),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.redditRed,
-                  ),
-                );
-              }
+          body: RefreshIndicator(
+            onRefresh: () async {
+              updateHomePageFunction!();
             },
+            child: BlocBuilder<RedditPostsBloc, AbstractRedditPostsState>(
+              builder: (context, state) {
+                if (state is RedditPostsLoadedState) {
+                  updateHomePageFunction = () => context.read<RedditPostsBloc>().add(FetchRedditPostsEvent());
+                  return ListView(
+                    padding: EdgeInsets.zero,
+                    children: _buildRedditPostList(state.redditPosts),
+                  );
+                } else if (state is RedditPostsErrorState) {
+                  return ErrorOccurredWidget(
+                    reload: () => context.read<RedditPostsBloc>().add(FetchRedditPostsEvent()),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.redditRed,
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
