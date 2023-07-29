@@ -25,7 +25,7 @@ class _RedditHomePageState extends State<RedditHomePage> {
         floatingActionButton: SwitchTopicButton(),
         backgroundColor: AppColors.mainBlue,
         body: NestedScrollView(
-          floatHeaderSlivers: true,
+          floatHeaderSlivers: false,
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               const CustomAppBar(title: "Reddit"),
