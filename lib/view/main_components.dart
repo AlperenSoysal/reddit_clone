@@ -222,7 +222,13 @@ class ErrorOccurredWidget extends StatelessWidget {
 class SwitchTopicButton extends StatelessWidget {
   SwitchTopicButton({Key? key}) : super(key: key);
 
-  final List<String> topicList = ["trading", "flutterdev", "spacex", "istanbul"];
+  final List<String> topicList = [
+    "trading",
+    "flutterdev",
+    "spacex",
+    "istanbul",
+    "elonmusk",
+  ];
 
   @override
   Widget build(BuildContext context) {
